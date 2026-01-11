@@ -588,7 +588,15 @@
             setInterval(() => {
                 const now = new Date();
                 dateEl.innerText = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                timeEl.innerText = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+                
+                // Check our global variable to decide format
+                const is12h = (browserTimeFormat === '12h');
+
+                timeEl.innerText = now.toLocaleTimeString(is12h ? 'en-US' : 'en-GB', { 
+                    hour12: is12h, 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
             }, 1000);
         }
 
