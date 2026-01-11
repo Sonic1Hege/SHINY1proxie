@@ -55,7 +55,7 @@
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(40px);
             -webkit-backdrop-filter: blur(40px);
-            /* NEW DIMENSIONS */
+            /* UPDATED DIMENSIONS */
             width: 90%;           
             max-width: 950px;      /* Much wider */
             min-height: 550px;     /* Taller */
@@ -85,7 +85,7 @@
             }
         }
 
-        /* --- NEW: Split Layout Styles (Left/Right) --- */
+        /* --- SPLIT LAYOUT STYLES (Left/Right) --- */
         .oobe-split {
             display: flex;
             flex-direction: row; /* Aligns items horizontally */
@@ -128,7 +128,7 @@
 
         .input-wrapper {
             width: 100%;
-            max-width: 400px; /* Keeps input button centered and not too wide */
+            max-width: 400px; /* Keeps input button centered */
             margin-bottom: 30px;
             position: relative;
         }
@@ -289,6 +289,8 @@
             font-size: 13px;
             font-weight: 500;
             border: 1px solid rgba(255,255,255,0.05);
+            min-width: 100px;
+            justify-content: center;
         }
 
         /* --- 5. WINDOW MANAGER --- */
@@ -432,7 +434,7 @@
                             <input type="password" id="passwordInput" class="oobe-input" placeholder="Password" autocomplete="off">
                         </div>
                         <button class="btn-primary" onclick="checkPass()">Sign In</button>
-                        <div id="error-msg" class="error-text">Incorrect password. Hint: SHINY1</div>
+                        <div id="error-msg" class="error-text">Incorrect password. Please try again.</div>
                     </div>
                 </div>
             </div>
@@ -514,8 +516,8 @@
         const PASSWORD = "SHINY1";
         let username = localStorage.getItem('user_name') || "";
         let zIndexCounter = 100;
-        let browserTimeFormat = '24h'; // New variable for time format
-        let browserTimeInterval = null; // To manage the clock timer
+        let browserTimeFormat = '24h'; // Default to 24-hour format
+        let browserTimeInterval = null; // To manage the clock timer inside browser
         
         /* --- DOM ELEMENTS --- */
         const oobeContainer = document.getElementById('oobe-container');
@@ -589,14 +591,20 @@
                 const now = new Date();
                 dateEl.innerText = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                 
-                // Check our global variable to decide format
-                const is12h = (browserTimeFormat === '12h');
-
-                timeEl.innerText = now.toLocaleTimeString(is12h ? 'en-US' : 'en-GB', { 
-                    hour12: is12h, 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                });
+                // Manual Time Formatting (More Reliable)
+                let hours = now.getHours();
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                
+                if (browserTimeFormat === '12h') {
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12; // the hour '0' should be '12'
+                    timeEl.innerText = `${hours}:${minutes} ${ampm}`;
+                } else {
+                    // 24h format
+                    const hoursStr = hours.toString().padStart(2, '0');
+                    timeEl.innerText = `${hoursStr}:${minutes}`;
+                }
             }, 1000);
         }
 
@@ -899,10 +907,10 @@
                     output.innerHTML += `<div class="term-line">Commands: help, exit, clear, 12h, 24h</div>`;
                 } else if (cmd === '12h') {
                     browserTimeFormat = '12h';
-                    output.innerHTML += `<div class="term-line">Time format set to 12-hour. Check browser.</div>`;
+                    output.innerHTML += `<div class="term-line">Time format set to 12-hour. Check browser & taskbar.</div>`;
                 } else if (cmd === '24h') {
                     browserTimeFormat = '24h';
-                    output.innerHTML += `<div class="term-line">Time format set to 24-hour. Check browser.</div>`;
+                    output.innerHTML += `<div class="term-line">Time format set to 24-hour. Check browser & taskbar.</div>`;
                 } else if (cmd === 'clear') {
                     output.innerHTML = '';
                 } else if (cmd !== "") {
@@ -959,15 +967,23 @@
                 // Update Date
                 dateEl.innerText = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-                // Update Time based on format
+                // Update Time based on format (Using manual logic to match Taskbar)
+                let hours = now.getHours();
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const seconds = now.getSeconds().toString().padStart(2, '0');
+
                 if (browserTimeFormat === '12h') {
-                    timeEl.innerText = now.toLocaleTimeString('en-US', { hour12: true, hour: 'numeric', minute: '2-digit', second: '2-digit' });
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12;
+                    timeEl.innerText = `${hours}:${minutes}:${seconds} ${ampm}`;
                 } else {
-                    timeEl.innerText = now.toLocaleTimeString('en-GB', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                    const hoursStr = hours.toString().padStart(2, '0');
+                    timeEl.innerText = `${hoursStr}:${minutes}:${seconds}`;
                 }
                 
                 // Update format text
-                fmtEl.innerText = browserTimeFormat;
+                if(fmtEl) fmtEl.innerText = browserTimeFormat;
 
             }, 1000);
         }
