@@ -51,7 +51,7 @@
             transition: opacity 0.8s ease-in-out;
         }
 
-.oobe-card {
+        .oobe-card {
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(40px);
             -webkit-backdrop-filter: blur(40px);
@@ -74,7 +74,6 @@
             animation: cardEntrance 1s cubic-bezier(0.19, 1, 0.22, 1) forwards;
         }
 
-        /* PASTE THIS DIRECTLY UNDER THE .oobe-card BLOCK */
         @keyframes cardEntrance {
             0% { 
                 opacity: 0; 
@@ -86,25 +85,53 @@
             }
         }
 
-        .oobe-card h2 {
-            font-size: 24px;
+        /* --- NEW: Split Layout Styles (Left/Right) --- */
+        .oobe-split {
+            display: flex;
+            flex-direction: row; /* Aligns items horizontally */
+            width: 100%;
+            height: 100%;
+            align-items: center; /* Vertically center */
+            justify-content: space-between;
+            gap: 20px;
+            text-align: left; /* Force text to align left */
+        }
+
+        /* The Left Side (Text) */
+        .split-left {
+            flex: 1; /* Takes up 50% width */
+            padding-right: 20px;
+            border-right: 1px solid rgba(0,0,0,0.05); /* Optional subtle divider line */
+        }
+
+        .split-left h2 {
+            font-size: 42px; /* Make "Welcome" much bigger */
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 15px;
             color: #1d1d1f;
         }
 
-        .oobe-card p {
-            font-size: 15px;
+        .split-left p {
+            font-size: 18px;
             color: #86868b;
-            margin-bottom: 30px;
         }
 
-.input-wrapper {
-    width: 100%;
-    max-width: 400px; /* Keeps input button centered and not too wide */
-    margin-bottom: 30px;
-    position: relative;
-}
+        /* The Right Side (Inputs) */
+        .split-right {
+            flex: 1; /* Takes up 50% width */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-left: 40px;
+        }
+
+        .input-wrapper {
+            width: 100%;
+            max-width: 400px; /* Keeps input button centered and not too wide */
+            margin-bottom: 30px;
+            position: relative;
+        }
 
         .oobe-input {
             width: 100%;
@@ -139,14 +166,14 @@
         .btn-primary:hover { background-color: #0063cf; }
         .btn-primary:active { transform: scale(0.96); }
 
-/* Step Animations */
-.step {
-    display: none;
-    width: 100%;
-    opacity: 0;
-    transform: translateY(60px); /* Increased distance for "Come Up" effect */
-    transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); /* Smoother, slower slide */
-}
+        /* Step Animations */
+        .step {
+            display: none;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(60px); /* Increased distance for "Come Up" effect */
+            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); /* Smoother, slower slide */
+        }
         .step.active {
             display: block;
             opacity: 1;
@@ -171,6 +198,7 @@
             opacity: 0;
             transition: 0.3s;
             height: 20px;
+            text-align: center;
         }
 
         /* --- 3. DESKTOP & WALLPAPER --- */
@@ -372,31 +400,47 @@
     <div id="oobe-container">
         <div class="oobe-card">
             
-            <!-- Step 1: Name -->
+            <!-- Step 1: Name (Split Layout) -->
             <div id="step-name" class="step active">
-                <h2>Welcome</h2>
-                <p>Who's going to use this PC?</p>
-                <div class="input-wrapper">
-                    <input type="text" id="usernameInput" class="oobe-input" placeholder="Enter your name" autocomplete="off">
+                <div class="oobe-split">
+                    <!-- Left Side: Text -->
+                    <div class="split-left">
+                        <h2>Welcome.</h2>
+                        <p>Let's get you set up. Who is going to use this PC?</p>
+                    </div>
+                    <!-- Right Side: Input -->
+                    <div class="split-right">
+                        <div class="input-wrapper">
+                            <input type="text" id="usernameInput" class="oobe-input" placeholder="Enter your name" autocomplete="off">
+                        </div>
+                        <button class="btn-primary" onclick="nextStep()">Next</button>
+                    </div>
                 </div>
-                <button class="btn-primary" onclick="nextStep()">Next</button>
             </div>
 
-            <!-- Step 2: Password -->
+            <!-- Step 2: Password (Split Layout) -->
             <div id="step-pass" class="step">
-                <h2 id="greeting-text">Hello</h2>
-                <p>Please enter the password.</p>
-                <div class="input-wrapper">
-                    <input type="password" id="passwordInput" class="oobe-input" placeholder="Password" autocomplete="off">
+                <div class="oobe-split">
+                    <!-- Left Side: Text -->
+                    <div class="split-left">
+                        <h2 id="greeting-text">Hello</h2>
+                        <p>This session is protected. Please enter the administrator password.</p>
+                    </div>
+                    <!-- Right Side: Input -->
+                    <div class="split-right">
+                        <div class="input-wrapper">
+                            <input type="password" id="passwordInput" class="oobe-input" placeholder="Password" autocomplete="off">
+                        </div>
+                        <button class="btn-primary" onclick="checkPass()">Sign In</button>
+                        <div id="error-msg" class="error-text">Incorrect password. Hint: SHINY1</div>
+                    </div>
                 </div>
-                <button class="btn-primary" onclick="checkPass()">Sign In</button>
-                <div id="error-msg" class="error-text">Incorrect password. Hint: SHINY1</div>
             </div>
 
-            <!-- Step 3: Loading Sequence -->
+            <!-- Step 3: Loading Sequence (Kept Centered) -->
             <div id="step-load" class="step">
                 <div class="loader"></div>
-                <p id="loading-text" style="color:#333; font-weight: 500;">Connecting to Internet...</p>
+                <p id="loading-text" style="color:#333; font-weight: 500; font-size: 18px;">Connecting to Internet...</p>
             </div>
 
         </div>
