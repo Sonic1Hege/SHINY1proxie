@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 Proxy Links - Updated 01/11/2026</title>
+    <!-- Favicon: Google Disguise -->
+    <link rel="icon" type="image/png" href="https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://google.com&size=16">
+
+    <style>
+        /* --- 1. CORE VARIABLES & RESET --- */
+        :root {
+            --bg-dark: #000;
+            --accent: #007aff; /* Modern Blue */
+            --glass-panel: rgba(245, 245, 245, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --window-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            --dock-bg: rgba(20, 20, 20, 0.6);
+            --danger: #ff3b30;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            user-select: none; /* Desktop OS feel */
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background-color: var(--bg-dark);
+            color: #333;
+        }
+
+        /* --- 2. OOBE (SETUP) STYLES --- */
+        #oobe-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Modern clean gradient */
+            background: radial-gradient(circle at 50% 10%, #fff 0%, #e6e9f0 100%);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease-in-out;
+        }
+
+        .oobe-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            width: 100%;
+            max-width: 440px;
+            min-height: 400px;
+            padding: 40px;
+            border-radius: 18px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255,255,255,0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .oobe-card h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1d1d1f;
+        }
+
+        .oobe-card p {
+            font-size: 15px;
+            color: #86868b;
+            margin-bottom: 30px;
+        }
+
+        .input-wrapper {
+            width: 100%;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .oobe-input {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.8);
+            outline: none;
+            transition: all 0.2s;
+            text-align: center;
+            user-select: text;
+        }
+
+        .oobe-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+            padding: 10px 24px;
+            font-size: 15px;
+            font-weight: 500;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.2s;
+        }
+
+        .btn-primary:hover { background-color: #0063cf; }
+        .btn-primary:active { transform: scale(0.96); }
+
+        /* Step Animations */
+        .step {
+            display: none;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+        }
+        .step.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .error-text {
+            color: #ff3b30;
+            font-size: 13px;
+            margin-top: 15px;
+            opacity: 0;
+            transition: 0.3s;
+            height: 20px;
+        }
+
+        /* --- 3. DESKTOP & WALLPAPER --- */
+        #desktop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            overflow: hidden;
+            /* Animated Aurora Background */
+            background: linear-gradient(-45deg, #020024, #090979, #2c003e, #00d4ff);
+            background-size: 400% 400%;
+            animation: auroraBG 15s ease infinite;
+        }
+
+        @keyframes auroraBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- 4. TASKBAR (DOCK) --- */
+        #taskbar {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 60px;
+            background: var(--dock-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            gap: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        .launcher-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .launcher-btn:hover { background: rgba(255,255,255,0.2); }
+        .launcher-circle { width: 14px; height: 14px; border: 2px solid #fff; border-radius: 50%; }
+
+        .app-divider { width: 1px; height: 30px; background: rgba(255,255,255,0.1); }
+
+        .app-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+        
+        .app-icon:hover { transform: scale(1.15) translateY(-5px); }
+        .app-icon svg { width: 36px; height: 36px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); }
+        
+        .app-icon.running::after {
+            content: ''; position: absolute; bottom: -6px; width: 4px; height: 4px;
+            background: white; border-radius: 50%; opacity: 0.8;
+        }
+
+        .tray-pill {
+            background: rgba(0,0,0,0.3);
+            padding: 8px 16px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* --- 5. WINDOW MANAGER --- */
+        #window-area { position: absolute; width: 100%; height: 100%; pointer-events: none; }
+        
+        .window {
+            position: absolute;
+            background: var(--glass-panel);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 10px;
+            box-shadow: var(--window-shadow);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.2s, transform 0.2s;
+            pointer-events: all;
+        }
+
+        .window.open { opacity: 1; transform: scale(1); }
+        
+        .title-bar {
+            height: 38px;
+            background: rgba(230, 230, 230, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            cursor: default;
+        }
+
+        .title-text { font-size: 13px; font-weight: 600; color: #333; }
+
+        .traffic-lights { position: absolute; left: 12px; display: flex; gap: 8px; }
+        .win-btn { width: 12px; height: 12px; border-radius: 50%; border: none; cursor: pointer; }
+        .win-close { background: #ff5f57; border: 1px solid #e0443e; }
+        .win-min { background: #febc2e; border: 1px solid #dba520; }
+        .win-max { background: #28c840; border: 1px solid #1aab29; }
+        
+        .window-body { flex: 1; overflow: hidden; position: relative; }
+
+        /* --- 6. APP STYLES --- */
+
+        /* BROWSER */
+        .browser-layout { display: flex; flex-direction: column; height: 100%; background: #fff; }
+        .browser-nav { padding: 8px 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
+        .nav-controls span { font-size: 16px; color: #555; cursor: pointer; padding: 0 4px; }
+        .url-bar { flex: 1; background: #f1f1f4; border-radius: 8px; padding: 6px 12px; font-size: 13px; color: #333; display: flex; align-items: center; }
+        .url-input { border: none; background: transparent; width: 100%; outline: none; margin-left: 5px; user-select: text;}
+        
+        .browser-content { flex: 1; overflow-y: auto; padding: 0; }
+        .proxy-hub { padding: 30px; }
+        .proxy-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .proxy-table th { text-align: left; font-size: 11px; text-transform: uppercase; color: #888; padding: 10px 15px; border-bottom: 1px solid #eee; }
+        .proxy-table td { padding: 12px 15px; font-size: 14px; border-bottom: 1px solid #f5f5f5; vertical-align: middle; }
+        
+        .status-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 12px; }
+        .status-blocked { background: #ffebee; color: #c62828; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; }
+        .dot-red { background: #dc3545; }
+        
+        .btn-launch { 
+            background: #f0f0f5; color: #999; text-decoration: none; padding: 6px 14px; border-radius: 6px; 
+            font-size: 13px; display: inline-block; cursor: not-allowed; opacity: 0.6;
+        }
+
+        /* FILES */
+        .files-container { display: flex; height: 100%; background: #fff; }
+        .files-sidebar { width: 160px; background: #f5f5f7; border-right: 1px solid #e5e5e5; padding: 10px; display: flex; flex-direction: column; gap: 2px; }
+        .sidebar-row { padding: 8px 10px; border-radius: 6px; font-size: 13px; color: #444; cursor: pointer; }
+        .sidebar-row.active { background: #e4e4e6; color: #000; font-weight: 500; }
+        .files-main { flex: 1; padding: 20px; overflow-y: auto; }
+        .files-grid { display: flex; gap: 20px; flex-wrap: wrap; }
+        .file-icon-box { width: 80px; display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 5px; border-radius: 5px; }
+        .file-icon-box:hover { background: #eef4ff; }
+        .file-svg { width: 48px; height: 48px; margin-bottom: 5px; }
+        .file-label { font-size: 12px; text-align: center; color: #333; white-space: nowrap; width: 100%; overflow: hidden; text-overflow: ellipsis; }
+        .empty-state { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #999; }
+
+        /* TERMINAL */
+        .term-window { background: #1e1e1e !important; color: #00ff00; }
+        .term-title { background: #2d2d2d; color: #ccc; border-bottom: 1px solid #333; }
+        .term-body { padding: 10px; font-family: 'Courier New', monospace; height: 100%; user-select: text; overflow-y: auto; }
+        .term-line { margin-bottom: 4px; line-height: 1.4; font-size: 14px; }
+        .term-input-line { display: flex; }
+        .term-prompt { color: #00ff00; margin-right: 8px; }
+        .term-input { background: transparent; border: none; color: #fff; outline: none; font-family: 'Courier New', monospace; flex: 1; font-size: 14px; }
+
+        /* SETTINGS */
+        .settings-container { display: flex; height: 100%; background: #fff; }
+        .settings-side { width: 180px; border-right: 1px solid #eee; padding: 20px 10px; background: #f9f9f9; }
+        .settings-menu { padding: 8px 12px; margin-bottom: 4px; border-radius: 6px; font-size: 13px; color: #333; }
+        .settings-menu.active { background: var(--accent); color: white; }
+        .settings-panel { flex: 1; padding: 30px; }
+        .setting-group { margin-bottom: 25px; }
+        .setting-label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; }
+        .btn-danger { background: var(--danger); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; cursor: pointer; }
+        .btn-danger:hover { background: #d70015; }
+
+    </style>
+</head>
+<body>
+
+    <!-- OOBE SCREEN -->
+    <div id="oobe-container">
+        <div class="oobe-card">
+            
+            <!-- Step 1: Name -->
+            <div id="step-name" class="step active">
+                <h2>Welcome</h2>
+                <p>Who's going to use this PC?</p>
+                <div class="input-wrapper">
+                    <input type="text" id="usernameInput" class="oobe-input" placeholder="Enter your name" autocomplete="off">
+                </div>
+                <button class="btn-primary" onclick="nextStep()">Next</button>
+            </div>
+
+            <!-- Step 2: Password -->
+            <div id="step-pass" class="step">
+                <h2 id="greeting-text">Hello</h2>
+                <p>Please enter the password.</p>
+                <div class="input-wrapper">
+                    <input type="password" id="passwordInput" class="oobe-input" placeholder="Password" autocomplete="off">
+                </div>
+                <button class="btn-primary" onclick="checkPass()">Sign In</button>
+                <div id="error-msg" class="error-text">Incorrect password. Hint: SHINY1</div>
+            </div>
+
+            <!-- Step 3: Loading Sequence -->
+            <div id="step-load" class="step">
+                <div class="loader"></div>
+                <p id="loading-text" style="color:#333; font-weight: 500;">Connecting to Internet...</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- DESKTOP ENVIRONMENT -->
+    <div id="desktop">
+        
+        <!-- Window Area -->
+        <div id="window-area"></div>
+
+        <!-- Taskbar / Dock -->
+        <div id="taskbar">
+            <!-- Start Button -->
+            <div class="launcher-btn" onclick="alert('Menu not available in simulated mode.')">
+                <div class="launcher-circle"></div>
+            </div>
+
+            <div class="app-divider"></div>
+
+            <!-- Browser Icon -->
+            <div class="app-icon" onclick="openApp('browser')" id="icon-browser" title="2026 Proxy Browser">
+                <!-- Wireframe Globe SVG -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+            </div>
+
+            <!-- Files Icon -->
+            <div class="app-icon" onclick="openApp('files')" id="icon-files" title="Files">
+                <!-- Blue Folder SVG -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="0" fill-rule="evenodd">
+                    <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z" fill="#5ac8fa"/>
+                    <path d="M2 6h10l2 2h8v2H2V6z" fill="#007aff"/>
+                </svg>
+            </div>
+
+            <!-- Terminal Icon -->
+            <div class="app-icon" onclick="openApp('terminal')" id="icon-terminal" title="Terminal">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="11" fill="#1e1e1e"/>
+                    <text x="6" y="16" fill="#00ff00" font-family="monospace" font-size="14" font-weight="bold">&gt;_</text>
+                </svg>
+            </div>
+
+            <!-- Settings Icon -->
+            <div class="app-icon" onclick="openApp('settings')" id="icon-settings" title="Settings">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+            </div>
+
+            <div class="app-divider"></div>
+
+            <!-- Tray Pill -->
+            <div class="tray-pill">
+                <span id="clock-date">Jan 11</span>
+                <span id="clock-time">12:00</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                     <path d="M12.01 21.49L23.64 7c-.45-.34-4.93-4-11.64-4C5.28 3 .81 6.66.36 7l11.63 14.49.01.01.01-.01z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* --- CONSTANTS & STATE --- */
+        const PASSWORD = "SHINY1";
+        let username = localStorage.getItem('user_name') || "";
+        let zIndexCounter = 100;
+        
+        /* --- DOM ELEMENTS --- */
+        const oobeContainer = document.getElementById('oobe-container');
+        const desktop = document.getElementById('desktop');
+        const windowArea = document.getElementById('window-area');
+
+        /* --- INITIALIZATION --- */
+        window.onload = () => {
+            if (username) {
+                oobeContainer.style.display = 'none';
+                desktop.style.display = 'block';
+                startClock();
+            } else {
+                document.getElementById('step-name').classList.add('active');
+            }
+        };
+
+        /* --- OOBE LOGIC --- */
+        function nextStep() {
+            const input = document.getElementById('usernameInput');
+            if (input.value.trim() !== "") {
+                username = input.value.trim();
+                document.getElementById('greeting-text').innerText = "Hello, " + username;
+                
+                document.getElementById('step-name').classList.remove('active');
+                setTimeout(() => {
+                    document.getElementById('step-pass').classList.add('active');
+                    document.getElementById('passwordInput').focus();
+                }, 400);
+            }
+        }
+
+        function checkPass() {
+            const input = document.getElementById('passwordInput');
+            const error = document.getElementById('error-msg');
+            
+            if (input.value === PASSWORD) {
+                error.style.opacity = '0';
+                localStorage.setItem('user_name', username);
+                startLoadingSequence();
+            } else {
+                error.style.opacity = '1';
+                input.value = "";
+                input.focus();
+            }
+        }
+
+        function startLoadingSequence() {
+            document.getElementById('step-pass').classList.remove('active');
+            setTimeout(() => { document.getElementById('step-load').classList.add('active'); }, 400);
+
+            const txt = document.getElementById('loading-text');
+            
+            setTimeout(() => { txt.innerText = "Loading Some Things..."; }, 1500);
+            setTimeout(() => { txt.innerText = "Ready!"; }, 3500);
+            setTimeout(() => {
+                oobeContainer.style.opacity = '0';
+                setTimeout(() => {
+                    oobeContainer.style.display = 'none';
+                    desktop.style.display = 'block';
+                    startClock();
+                }, 800);
+            }, 5000);
+        }
+
+        function startClock() {
+            const dateEl = document.getElementById('clock-date');
+            const timeEl = document.getElementById('clock-time');
+            
+            setInterval(() => {
+                const now = new Date();
+                dateEl.innerText = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                timeEl.innerText = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+            }, 1000);
+        }
+
+        /* --- WINDOW MANAGER --- */
+        
+        const apps = {
+            'browser': {
+                title: '2026 Proxy Browser',
+                width: 800,
+                height: 500,
+                content: `
+                    <div class="browser-layout">
+                        <div class="browser-nav">
+                            <div class="nav-controls">
+                                <span>&#8249;</span><span>&#8250;</span><span>&#8635;</span>
+                            </div>
+                            <div class="url-bar">
+                                🔒 <input class="url-input" value="https://hub.proxy/list" onkeydown="handleBrowserKey(event)">
+                            </div>
+                        </div>
+                        <div class="browser-content">
+                            <div class="proxy-hub">
+                                <div class="proxy-header">
+                                    <h2 style="color:#333;">2026 Proxy Hub</h2>
+                                    <p style="color:#666; font-size:13px;">Secure connection established. Select a service below.</p>
+                                </div>
+                                <table class="proxy-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date Added</th>
+                                            <th>Service Name</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Jan 11, 2026</td>
+                                            <td><strong>Interstellar</strong></td>
+                                            <td><span class="status-badge status-blocked"><span class="dot dot-red"></span> Blocked</span></td>
+                                            <td><button onclick="handleBlockedLink()" class="btn-launch">Open</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Jan 10, 2026</td>
+                                            <td><strong>Doge Unblocker</strong></td>
+                                            <td><span class="status-badge status-blocked"><span class="dot dot-red"></span> Blocked</span></td>
+                                            <td><button onclick="handleBlockedLink()" class="btn-launch">Open</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Jan 05, 2026</td>
+                                            <td><strong>Utopia</strong></td>
+                                            <td><span class="status-badge status-blocked"><span class="dot dot-red"></span> Blocked</span></td>
+                                            <td><button onclick="handleBlockedLink()" class="btn-launch">Open</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Dec 28, 2025</td>
+                                            <td><strong>Asteroid</strong></td>
+                                            <td><span class="status-badge status-blocked"><span class="dot dot-red"></span> Blocked</span></td>
+                                            <td><button onclick="handleBlockedLink()" class="btn-launch">Open</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Dec 25, 2025</td>
+                                            <td><strong>Rammerhead</strong></td>
+                                            <td><span class="status-badge status-blocked"><span class="dot dot-red"></span> Blocked</span></td>
+                                            <td><button onclick="handleBlockedLink()" class="btn-launch">Open</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Dec 20, 2025</td>
+                                            <td><strong>Incognito</strong></td>
+                                            <td><span class="status-badge status-blocked"><span class="dot dot-red"></span> Blocked</span></td>
+                                            <td><button onclick="handleBlockedLink()" class="btn-launch">Open</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Nov 15, 2025</td>
+                                            <td><strong>Samz</strong></td>
+                                            <td><span class="status-badge status-blocked"><span class="dot dot-red"></span> Blocked</span></td>
+                                            <td><button onclick="handleBlockedLink()" class="btn-launch">Open</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            'files': {
+                title: 'Files',
+                width: 600,
+                height: 400,
+                content: `
+                    <div class="files-container">
+                        <div class="files-sidebar">
+                            <div class="sidebar-row active">📁 Home</div>
+                            <div class="sidebar-row">⬇️ Downloads</div>
+                            <div class="sidebar-row">📄 Documents</div>
+                        </div>
+                        <div class="files-main" id="files-view-area">
+                            <div class="files-grid">
+                                <div class="file-icon-box" ondblclick="openEmptyFolder()">
+                                    <svg class="file-svg" viewBox="0 0 24 24" fill="#5ac8fa"><path d="M10 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V8C22 6.9 21.1 6 20 6H12L10 4Z"/></svg>
+                                    <span class="file-label">Downloads</span>
+                                </div>
+                                <div class="file-icon-box" ondblclick="openEmptyFolder()">
+                                    <svg class="file-svg" viewBox="0 0 24 24" fill="#ffcc00"><path d="M10 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V8C22 6.9 21.1 6 20 6H12L10 4Z"/></svg>
+                                    <span class="file-label">Not Available Yet</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            'terminal': {
+                title: 'Terminal',
+                width: 500,
+                height: 320,
+                class: 'term-window',
+                titleClass: 'term-title',
+                content: `
+                    <div class="term-body" onclick="document.getElementById('term-in').focus()">
+                        <div id="term-output">
+                            <div class="term-line">2026 Proxy Shell [Version 1.0.11]</div>
+                            <div class="term-line">(c) 2026 Corporation. All rights reserved.</div>
+                            <br>
+                        </div>
+                        <div class="term-input-line">
+                            <span class="term-prompt">user@2026:~$</span>
+                            <input id="term-in" class="term-input" autocomplete="off" onkeydown="handleTerminal(event)">
+                        </div>
+                    </div>
+                `
+            },
+            'settings': {
+                title: 'Settings',
+                width: 550,
+                height: 400,
+                content: `
+                    <div class="settings-container">
+                        <div class="settings-side">
+                            <div class="settings-menu active">System</div>
+                            <div class="settings-menu">Appearance</div>
+                            <div class="settings-menu">About</div>
+                        </div>
+                        <div class="settings-panel">
+                            <div class="setting-group">
+                                <span class="setting-label">Device Name</span>
+                                <div style="color:#666; font-size:13px;">Proxy-Link-Station-26</div>
+                            </div>
+                             <div class="setting-group">
+                                <span class="setting-label">Current User</span>
+                                <div style="color:#666; font-size:13px;" id="setting-user-display">User</div>
+                            </div>
+                            <div class="setting-group" style="margin-top:40px; border-top:1px solid #eee; padding-top:20px;">
+                                <span class="setting-label" style="color:#ff3b30;">Powerwash</span>
+                                <p style="font-size:12px; color:#888; margin-bottom:10px;">Remove all data and reset OOBE.</p>
+                                <button class="btn-danger" onclick="powerwash()">Reset Device</button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        function openApp(appId) {
+            const existing = document.getElementById('win-' + appId);
+            if (existing) {
+                bringToFront(existing);
+                return;
+            }
+
+            const app = apps[appId];
+            const win = document.createElement('div');
+            win.id = 'win-' + appId;
+            win.className = `window ${app.class || ''}`;
+            win.style.width = app.width + 'px';
+            win.style.height = app.height + 'px';
+            win.style.zIndex = ++zIndexCounter;
+            
+            const randX = Math.random() * 40 + 50;
+            const randY = Math.random() * 40 + 50;
+            win.style.left = randX + 'px';
+            win.style.top = randY + 'px';
+
+            win.innerHTML = `
+                <div class="title-bar ${app.titleClass || ''}" onmousedown="dragStart(event, '${win.id}')">
+                    <div class="traffic-lights">
+                        <button class="win-btn win-close" onclick="closeWindow('${win.id}')"></button>
+                        <button class="win-btn win-min" onclick="minWindow('${win.id}')"></button>
+                        <button class="win-btn win-max"></button>
+                    </div>
+                    <span class="title-text">${app.title}</span>
+                </div>
+                <div class="window-body">${app.content}</div>
+            `;
+
+            win.addEventListener('mousedown', () => bringToFront(win));
+            windowArea.appendChild(win);
+            document.getElementById('icon-' + appId).classList.add('running');
+            
+            if(appId === 'settings') {
+                setTimeout(() => { document.getElementById('setting-user-display').innerText = username; }, 0);
+            }
+
+            requestAnimationFrame(() => { win.classList.add('open'); });
+        }
+
+        function closeWindow(id) {
+            const win = document.getElementById(id);
+            win.classList.remove('open');
+            setTimeout(() => { win.remove(); }, 200);
+            
+            const appId = id.replace('win-', '');
+            document.getElementById('icon-' + appId).classList.remove('running');
+        }
+
+        function minWindow(id) {
+            const win = document.getElementById(id);
+            win.classList.remove('open');
+        }
+
+        function bringToFront(win) {
+            win.style.zIndex = ++zIndexCounter;
+        }
+
+        /* --- DRAG LOGIC --- */
+        let dragItem = null;
+        let diffX = 0, diffY = 0;
+
+        function dragStart(e, id) {
+            const win = document.getElementById(id);
+            bringToFront(win);
+            dragItem = win;
+            diffX = e.clientX - win.offsetLeft;
+            diffY = e.clientY - win.offsetTop;
+            document.addEventListener('mousemove', dragMove);
+            document.addEventListener('mouseup', dragStop);
+        }
+
+        function dragMove(e) {
+            if (!dragItem) return;
+            e.preventDefault();
+            dragItem.style.left = (e.clientX - diffX) + 'px';
+            dragItem.style.top = (e.clientY - diffY) + 'px';
+        }
+
+        function dragStop() {
+            dragItem = null;
+            document.removeEventListener('mousemove', dragMove);
+            document.removeEventListener('mouseup', dragStop);
+        }
+
+        /* --- APP LOGIC HANDLERS --- */
+        
+        function handleBrowserKey(e) {
+            if (e.key === 'Enter') {
+                alert("Restricted: Manual navigation is disabled by Administrator.");
+            }
+        }
+
+        function handleBlockedLink() {
+            alert("ERR_CONNECTION_REFUSED\n\nThis proxy service is currently blocked by the administrator.");
+        }
+
+        function openEmptyFolder() {
+            const area = document.getElementById('files-view-area');
+            area.innerHTML = `
+                <div class="empty-state">
+                    <svg style="width:64px; height:64px; opacity:0.3; margin-bottom:10px;" viewBox="0 0 24 24" fill="currentColor">
+                         <path d="M10 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V8C22 6.9 21.1 6 20 6H12L10 4Z"/>
+                    </svg>
+                    <p>This folder is empty.</p>
+                </div>
+            `;
+        }
+
+        function handleTerminal(e) {
+            if (e.key === 'Enter') {
+                const input = e.target;
+                const cmd = input.value.trim().toLowerCase();
+                const output = document.getElementById('term-output');
+
+                output.innerHTML += `<div class="term-line"><span class="term-prompt">user@2026:~$</span>${input.value}</div>`;
+
+                if (cmd === 'exit') {
+                    output.innerHTML += `<div class="term-line" style="color:red">Shutting down system...</div>`;
+                    input.disabled = true;
+                    setTimeout(() => {
+                        document.body.style.background = '#000';
+                        document.body.innerHTML = ''; 
+                        setTimeout(() => { window.location.href = "https://www.google.com"; }, 1000);
+                    }, 1000);
+                } else if (cmd === 'help') {
+                    output.innerHTML += `<div class="term-line">Available commands: help, exit, clear</div>`;
+                } else if (cmd === 'clear') {
+                    output.innerHTML = '';
+                } else if (cmd !== "") {
+                    output.innerHTML += `<div class="term-line">bash: command not found: ${cmd}</div>`;
+                }
+
+                input.value = "";
+                input.scrollIntoView();
+            }
+        }
+
+        function powerwash() {
+            if(confirm("Are you sure you want to reset? This will erase your name and restart.")) {
+                localStorage.removeItem('user_name');
+                location.reload();
+            }
+        }
+
+    </script>
+</body>
+</html>
